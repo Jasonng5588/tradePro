@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TradePro | Mobile Trading Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://s3.tradingview.com/tv.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+      <div class="splash-content">
+        <div class="logo-container">
+          <div class="logo-icon">
+            <svg viewBox="0 0 100 100" fill="none">
+              <defs>
+                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00f5ff" />
+                  <stop offset="100%" style="stop-color:#7b2ff7" />
+                </linearGradient>
+              </defs>
+              <path d="M20 70 L35 45 L50 55 L65 30 L80 40" stroke="url(#logoGrad)" stroke-width="4" fill="none"
+                stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="80" cy="40" r="6" fill="#00f5ff" />
+            </svg>
+          </div>
+          <h1 class="logo-text">TradePro</h1>
+        </div>
+        <p class="tagline">智能交易 · 财富自由</p>
+        <div class="loading-bar">
+          <div class="loading-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="screen">
+      <div class="auth-container">
+        <div class="auth-header">
+          <div class="logo-small">
+            <svg viewBox="0 0 100 100" fill="none" width="50" height="50">
+              <defs>
+                <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00f5ff" />
+                  <stop offset="100%" style="stop-color:#7b2ff7" />
+                </linearGradient>
+              </defs>
+              <path d="M20 70 L35 45 L50 55 L65 30 L80 40" stroke="url(#logoGrad2)" stroke-width="4" fill="none"
+                stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="80" cy="40" r="6" fill="#00f5ff" />
+            </svg>
+          </div>
+          <h1>TradePro</h1>
+          <p>开启您的智能交易之旅</p>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">登录</button>
+          <button class="auth-tab" data-tab="register">注册</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active">
+          <div class="input-group">
+            <label>邮箱</label>
+            <input type="email" id="login-email" placeholder="请输入邮箱" required>
+          </div>
+          <div class="input-group">
+            <label>密码</label>
+            <input type="password" id="login-password" placeholder="请输入密码" required>
+          </div>
+          <button type="submit" class="btn-primary">登录</button>
+          <a href="#" class="forgot-password">忘记密码?</a>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form">
+          <div class="input-group">
+            <label>邮箱</label>
+            <input type="email" id="register-email" placeholder="请输入邮箱" required>
+          </div>
+          <div class="input-group">
+            <label>密码</label>
+            <input type="password" id="register-password" placeholder="至少6位密码" required minlength="6">
+          </div>
+          <div class="input-group">
+            <label>确认密码</label>
+            <input type="password" id="register-confirm" placeholder="再次输入密码" required>
+          </div>
+          <div class="input-group">
+            <label>邀请码 (选填)</label>
+            <input type="text" id="register-referral" placeholder="输入邀请码">
+          </div>
+          <button type="submit" class="btn-primary">注册</button>
+        </form>
+
+        <div class="auth-divider">
+          <span>或</span>
+        </div>
+
+        <div class="social-login">
+          <button class="btn-social google" onclick="socialLogin('google')">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="#fff"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#fff"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#fff"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+              <path fill="#fff"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            Google 登录
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="main-app" class="screen">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <img id="user-avatar" src="" alt="" class="avatar">
+          <span id="user-greeting">Hi, User</span>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn notification-btn" onclick="showNotifications()">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path fill="currentColor"
+                d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+            </svg>
+            <span class="notification-badge">3</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <main id="page-container">
+
+        <!-- Dashboard Page -->
+        <div id="page-dashboard" class="page active">
+          <!-- Portfolio Summary Card -->
+          <div class="portfolio-card glass-card">
+            <div class="portfolio-header">
+              <span class="label">总资产 (USD)</span>
+              <button class="icon-btn" onclick="toggleBalance()">
+                <svg id="eye-icon" viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="currentColor"
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                </svg>
+              </button>
+            </div>
+            <div class="portfolio-balance">
+              <span id="total-balance" class="balance-amount">$10,000.00</span>
+              <span id="balance-change" class="balance-change positive">+$245.80 (2.45%)</span>
+            </div>
+            <div class="portfolio-actions">
+              <button class="action-btn" onclick="navigateTo('deposit')">
+                <div class="action-icon deposit">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                </div>
+                <span>充值</span>
+              </button>
+              <button class="action-btn" onclick="navigateTo('withdraw')">
+                <div class="action-icon withdraw">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M19 13H5v-2h14v2z" />
+                  </svg>
+                </div>
+                <span>提现</span>
+              </button>
+              <button class="action-btn" onclick="navigateTo('trading')">
+                <div class="action-icon trade">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                      d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                  </svg>
+                </div>
+                <span>交易</span>
+              </button>
+              <button class="action-btn" onclick="navigateTo('predictions')">
+                <div class="action-icon predict">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor"
+                      d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+                  </svg>
+                </div>
+                <span>预测</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Market Overview -->
+          <div class="section-header">
+            <h2>市场概览</h2>
+            <a href="#" onclick="navigateTo('markets'); return false;">查看全部</a>
+          </div>
+          <div class="market-indices">
+            <div class="index-card glass-card">
+              <span class="index-name">S&P 500</span>
+              <span class="index-value">4,927.85</span>
+              <span class="index-change positive">+0.58%</span>
+            </div>
+            <div class="index-card glass-card">
+              <span class="index-name">NASDAQ</span>
+              <span class="index-value">15,628.95</span>
+              <span class="index-change positive">+1.01%</span>
+            </div>
+            <div class="index-card glass-card">
+              <span class="index-name">BTC</span>
+              <span class="index-value">$43,250</span>
+              <span class="index-change positive">+2.00%</span>
+            </div>
+          </div>
+
+          <!-- Hot Stocks -->
+          <div class="section-header">
+            <h2>热门股票</h2>
+            <a href="#" onclick="navigateTo('markets'); return false;">更多</a>
+          </div>
+          <div id="hot-stocks" class="stock-list">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Promotions Banner -->
+          <div class="section-header">
+            <h2>优惠活动</h2>
+          </div>
+          <div class="promotions-container">
+            <div class="promo-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="promo-content">
+                <span class="promo-badge">新用户专享</span>
+                <h3>首充双倍奖励</h3>
+                <p>首次充值即送100%奖金</p>
+                <button class="promo-btn" onclick="navigateTo('deposit')">立即充值</button>
+              </div>
+              <div class="promo-image">💰</div>
+            </div>
+            <div class="promo-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <div class="promo-content">
+                <span class="promo-badge">限时活动</span>
+                <h3>邀请好友</h3>
+                <p>邀请好友各得$50</p>
+                <button class="promo-btn" onclick="showReferral()">邀请好友</button>
+              </div>
+              <div class="promo-image">🎁</div>
+            </div>
+            <div class="promo-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <div class="promo-content">
+                <span class="promo-badge">VIP特权</span>
+                <h3>零手续费交易</h3>
+                <p>VIP会员享无限免费交易</p>
+                <button class="promo-btn" onclick="navigateTo('profile')">成为VIP</button>
+              </div>
+              <div class="promo-image">👑</div>
+            </div>
+          </div>
+
+          <!-- Quick Access -->
+          <div class="section-header">
+            <h2>快捷功能</h2>
+          </div>
+          <div class="quick-access">
+            <button class="quick-btn" onclick="navigateTo('charts')">
+              <div class="quick-icon">📊</div>
+              <span>K线图</span>
+            </button>
+            <button class="quick-btn" onclick="navigateTo('analysis')">
+              <div class="quick-icon">📈</div>
+              <span>分析</span>
+            </button>
+            <button class="quick-btn" onclick="navigateTo('history')">
+              <div class="quick-icon">📋</div>
+              <span>历史</span>
+            </button>
+            <button class="quick-btn" onclick="navigateTo('help')">
+              <div class="quick-icon">❓</div>
+              <span>帮助</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Markets Page -->
+        <div id="page-markets" class="page">
+          <div class="page-header">
+            <h1>市场</h1>
+          </div>
+
+          <div class="market-tabs">
+            <button class="market-tab active" data-market="all">全部</button>
+            <button class="market-tab" data-market="stocks">股票</button>
+            <button class="market-tab" data-market="crypto">加密货币</button>
+            <button class="market-tab" data-market="forex">外汇</button>
+          </div>
+
+          <div class="search-bar">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor"
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" id="stock-search" placeholder="搜索股票、外汇、加密货币...">
+          </div>
+
+          <div id="market-list" class="market-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Charts Page -->
+        <div id="page-charts" class="page">
+          <div class="chart-header">
+            <button class="back-btn" onclick="navigateTo('dashboard')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <div class="chart-symbol-info">
+              <span id="chart-symbol" class="chart-symbol">AAPL</span>
+              <span id="chart-name" class="chart-name">Apple Inc.</span>
+            </div>
+            <button class="icon-btn" onclick="toggleWatchlist()">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor"
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="chart-price-display">
+            <span id="chart-price" class="current-price">$178.50</span>
+            <span id="chart-change" class="price-change positive">+$2.35 (+1.33%)</span>
+          </div>
+
+          <div id="tradingview-widget" class="chart-container"></div>
+
+          <div class="chart-timeframes">
+            <button class="tf-btn" data-tf="1">1分</button>
+            <button class="tf-btn" data-tf="5">5分</button>
+            <button class="tf-btn" data-tf="15">15分</button>
+            <button class="tf-btn active" data-tf="60">1时</button>
+            <button class="tf-btn" data-tf="D">日</button>
+            <button class="tf-btn" data-tf="W">周</button>
+          </div>
+
+          <div class="chart-actions">
+            <button class="chart-action-btn buy" onclick="openTradeModal('buy')">买入</button>
+            <button class="chart-action-btn sell" onclick="openTradeModal('sell')">卖出</button>
+          </div>
+        </div>
+
+        <!-- Trading Page -->
+        <div id="page-trading" class="page">
+          <div class="page-header">
+            <h1>交易</h1>
+          </div>
+
+          <div class="trading-balance glass-card">
+            <span class="label">可用余额</span>
+            <span id="trading-balance" class="balance">$10,000.00</span>
+          </div>
+
+          <div class="trade-form glass-card">
+            <div class="trade-type-tabs">
+              <button class="trade-type-tab active" data-type="buy">买入</button>
+              <button class="trade-type-tab" data-type="sell">卖出</button>
+            </div>
+
+            <div class="input-group">
+              <label>交易品种</label>
+              <select id="trade-symbol">
+                <option value="AAPL">AAPL - Apple Inc.</option>
+                <option value="GOOGL">GOOGL - Alphabet</option>
+                <option value="MSFT">MSFT - Microsoft</option>
+                <option value="TSLA">TSLA - Tesla</option>
+                <option value="NVDA">NVDA - NVIDIA</option>
+                <option value="BTC">BTC - Bitcoin</option>
+                <option value="ETH">ETH - Ethereum</option>
+                <option value="EUR/USD">EUR/USD - Euro</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label>订单类型</label>
+              <select id="order-type">
+                <option value="market">市价单</option>
+                <option value="limit">限价单</option>
+                <option value="stop">止损单</option>
+              </select>
+            </div>
+
+            <div class="input-group" id="limit-price-group" style="display: none;">
+              <label>限价</label>
+              <input type="number" id="limit-price" placeholder="输入限价" step="0.01">
+            </div>
+
+            <div class="input-group">
+              <label>数量</label>
+              <input type="number" id="trade-quantity" placeholder="输入数量" step="0.01" value="1">
+            </div>
+
+            <div class="trade-summary">
+              <div class="summary-row">
+                <span>当前价格</span>
+                <span id="current-trade-price">$178.50</span>
+              </div>
+              <div class="summary-row">
+                <span>预计金额</span>
+                <span id="trade-total">$178.50</span>
+              </div>
+              <div class="summary-row">
+                <span>手续费</span>
+                <span id="trade-fee">$0.00</span>
+              </div>
+            </div>
+
+            <button id="execute-trade-btn" class="btn-primary buy-btn">确认买入</button>
+          </div>
+
+          <!-- Portfolio Section -->
+          <div class="section-header">
+            <h2>我的持仓</h2>
+          </div>
+          <div id="portfolio-list" class="portfolio-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Wallet Page -->
+        <div id="page-wallet" class="page">
+          <div class="page-header">
+            <h1>钱包</h1>
+          </div>
+
+          <div class="wallet-balance-card glass-card">
+            <span class="label">可用余额</span>
+            <span id="wallet-balance" class="balance-large">$10,000.00</span>
+          </div>
+
+          <div class="wallet-actions">
+            <button class="wallet-action" onclick="navigateTo('deposit')">
+              <div class="wallet-action-icon deposit">➕</div>
+              <span>充值</span>
+            </button>
+            <button class="wallet-action" onclick="navigateTo('withdraw')">
+              <div class="wallet-action-icon withdraw">➖</div>
+              <span>提现</span>
+            </button>
+            <button class="wallet-action" onclick="navigateTo('history')">
+              <div class="wallet-action-icon history">📋</div>
+              <span>记录</span>
+            </button>
+          </div>
+
+          <div class="section-header">
+            <h2>最近交易</h2>
+            <a href="#" onclick="navigateTo('history'); return false;">全部</a>
+          </div>
+          <div id="recent-transactions" class="transaction-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Deposit Page -->
+        <div id="page-deposit" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('wallet')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>充值</h1>
+          </div>
+
+          <div class="deposit-methods">
+            <h3>选择充值方式</h3>
+            <div class="method-grid">
+              <button class="method-card active" data-method="card">
+                <div class="method-icon">💳</div>
+                <span>银行卡</span>
+              </button>
+              <button class="method-card" data-method="crypto">
+                <div class="method-icon">₿</div>
+                <span>加密货币</span>
+              </button>
+              <button class="method-card" data-method="ewallet">
+                <div class="method-icon">📱</div>
+                <span>电子钱包</span>
+              </button>
+              <button class="method-card" data-method="bank">
+                <div class="method-icon">🏦</div>
+                <span>银行转账</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="deposit-form glass-card">
+            <div class="input-group">
+              <label>充值金额 (USD)</label>
+              <input type="number" id="deposit-amount" placeholder="输入金额" min="10" step="10">
+            </div>
+            <div class="quick-amounts">
+              <button class="quick-amount" data-amount="100">$100</button>
+              <button class="quick-amount" data-amount="500">$500</button>
+              <button class="quick-amount" data-amount="1000">$1,000</button>
+              <button class="quick-amount" data-amount="5000">$5,000</button>
+            </div>
+
+            <div class="deposit-bonus">
+              <span class="bonus-label">🎁 首充奖励</span>
+              <span id="bonus-amount" class="bonus-value">+$0.00</span>
+            </div>
+
+            <button id="confirm-deposit-btn" class="btn-primary">确认充值</button>
+          </div>
+        </div>
+
+        <!-- Withdraw Page -->
+        <div id="page-withdraw" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('wallet')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>提现</h1>
+          </div>
+
+          <div class="withdraw-balance glass-card">
+            <span class="label">可提现余额</span>
+            <span id="withdrawable-balance" class="balance">$10,000.00</span>
+          </div>
+
+          <div class="withdraw-form glass-card">
+            <div class="input-group">
+              <label>提现金额 (USD)</label>
+              <input type="number" id="withdraw-amount" placeholder="输入金额" min="50">
+            </div>
+            <button class="withdraw-all-btn" onclick="withdrawAll()">全部提现</button>
+
+            <div class="input-group">
+              <label>提现方式</label>
+              <select id="withdraw-method">
+                <option value="bank">银行转账</option>
+                <option value="crypto">USDT (TRC20)</option>
+                <option value="ewallet">电子钱包</option>
+              </select>
+            </div>
+
+            <div class="input-group" id="bank-details">
+              <label>银行账户</label>
+              <input type="text" id="bank-account" placeholder="请输入银行账户">
+            </div>
+
+            <div class="withdraw-info">
+              <div class="info-row">
+                <span>手续费</span>
+                <span id="withdraw-fee">$0.00</span>
+              </div>
+              <div class="info-row">
+                <span>预计到账</span>
+                <span>1-3 工作日</span>
+              </div>
+            </div>
+
+            <button id="confirm-withdraw-btn" class="btn-primary">确认提现</button>
+          </div>
+        </div>
+
+        <!-- Predictions Page -->
+        <div id="page-predictions" class="page">
+          <div class="page-header">
+            <h1>AI 预测</h1>
+          </div>
+
+          <div class="prediction-intro glass-card">
+            <div class="ai-icon">🤖</div>
+            <h3>智能预测系统</h3>
+            <p>基于机器学习算法分析历史数据，预测价格走势</p>
+          </div>
+
+          <div class="input-group">
+            <label>选择交易品种</label>
+            <select id="prediction-symbol" onchange="loadPrediction()">
+              <option value="AAPL">AAPL - Apple Inc.</option>
+              <option value="GOOGL">GOOGL - Alphabet</option>
+              <option value="MSFT">MSFT - Microsoft</option>
+              <option value="TSLA">TSLA - Tesla</option>
+              <option value="BTC">BTC - Bitcoin</option>
+              <option value="ETH">ETH - Ethereum</option>
+            </select>
+          </div>
+
+          <div id="prediction-result" class="prediction-result glass-card">
+            <div class="prediction-header">
+              <span id="pred-symbol" class="pred-symbol">AAPL</span>
+              <span id="pred-recommendation" class="pred-recommendation buy">BUY</span>
+            </div>
+            <div class="prediction-confidence">
+              <span class="label">置信度</span>
+              <div class="confidence-bar">
+                <div id="confidence-fill" class="confidence-fill" style="width: 85%"></div>
+              </div>
+              <span id="confidence-value" class="confidence-value">85%</span>
+            </div>
+            <div class="prediction-details">
+              <div class="pred-row">
+                <span>当前价格</span>
+                <span id="pred-current">$178.50</span>
+              </div>
+              <div class="pred-row">
+                <span>预测价格 (7天)</span>
+                <span id="pred-target">$186.20</span>
+              </div>
+              <div class="pred-row">
+                <span>预期收益</span>
+                <span id="pred-return" class="positive">+4.32%</span>
+              </div>
+            </div>
+            <button class="btn-primary" onclick="openTradeFromPrediction()">立即交易</button>
+          </div>
+
+          <div class="section-header">
+            <h2>技术分析</h2>
+          </div>
+          <div id="technical-analysis" class="tech-analysis glass-card">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Analysis Page -->
+        <div id="page-analysis" class="page">
+          <div class="page-header">
+            <h1>市场分析</h1>
+          </div>
+
+          <div class="analysis-summary glass-card">
+            <h3>市场情绪</h3>
+            <div class="sentiment-meter">
+              <div class="sentiment-bar">
+                <div class="sentiment-fill bullish" style="width: 65%"></div>
+              </div>
+              <div class="sentiment-labels">
+                <span>看跌</span>
+                <span>中性</span>
+                <span>看涨</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <h2>涨幅榜</h2>
+          </div>
+          <div id="top-gainers" class="stock-list">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="section-header">
+            <h2>跌幅榜</h2>
+          </div>
+          <div id="top-losers" class="stock-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="page-profile" class="page">
+          <div class="profile-header">
+            <div class="profile-cover"></div>
+            <div class="profile-avatar-container">
+              <img id="profile-avatar" src="" alt="" class="profile-avatar">
+              <button class="edit-avatar-btn">📷</button>
+            </div>
+            <h2 id="profile-name">用户名</h2>
+            <p id="profile-email">user@example.com</p>
+            <div class="vip-badge" onclick="navigateTo('vip')">
+              <span id="user-vip-level">🌟 VIP 0</span>
+            </div>
+          </div>
+
+          <div class="profile-stats glass-card">
+            <div class="stat-item">
+              <span class="stat-value" id="total-trades">0</span>
+              <span class="stat-label">交易次数</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="total-profit">$0</span>
+              <span class="stat-label">总收益</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="win-rate">0%</span>
+              <span class="stat-label">胜率</span>
+            </div>
+          </div>
+
+          <!-- VIP升级入口 -->
+          <div class="vip-upgrade-card glass-card" onclick="navigateTo('vip')">
+            <div class="vip-upgrade-info">
+              <span class="vip-crown">👑</span>
+              <div>
+                <h4>升级VIP</h4>
+                <p>享受更低手续费和专属特权</p>
+              </div>
+            </div>
+            <span class="menu-arrow">›</span>
+          </div>
+
+          <div class="section-header">
+            <h2>资金管理</h2>
+          </div>
+          <div class="profile-menu">
+            <button class="menu-item" onclick="navigateTo('payment-methods')">
+              <span class="menu-icon">💳</span>
+              <span class="menu-text">支付方式</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item" onclick="navigateTo('bank-accounts')">
+              <span class="menu-icon">🏦</span>
+              <span class="menu-text">银行账户</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item" onclick="navigateTo('history')">
+              <span class="menu-icon">📋</span>
+              <span class="menu-text">交易记录</span>
+              <span class="menu-arrow">›</span>
+            </button>
+          </div>
+
+          <div class="section-header">
+            <h2>账户安全</h2>
+          </div>
+          <div class="profile-menu">
+            <button class="menu-item" onclick="navigateTo('security')">
+              <span class="menu-icon">🔐</span>
+              <span class="menu-text">安全中心</span>
+              <span class="menu-badge">推荐</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item" onclick="navigateTo('verification')">
+              <span class="menu-icon">✅</span>
+              <span class="menu-text">身份认证</span>
+              <span id="kyc-status" class="menu-value">未认证</span>
+              <span class="menu-arrow">›</span>
+            </button>
+          </div>
+
+          <div class="section-header">
+            <h2>更多</h2>
+          </div>
+          <div class="profile-menu">
+            <button class="menu-item" onclick="showReferral()">
+              <span class="menu-icon">🎁</span>
+              <span class="menu-text">邀请好友</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item" onclick="navigateTo('settings')">
+              <span class="menu-icon">⚙️</span>
+              <span class="menu-text">设置</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item" onclick="navigateTo('help')">
+              <span class="menu-icon">❓</span>
+              <span class="menu-text">帮助中心</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item" onclick="navigateTo('about')">
+              <span class="menu-icon">ℹ️</span>
+              <span class="menu-text">关于我们</span>
+              <span class="menu-arrow">›</span>
+            </button>
+            <button class="menu-item logout" onclick="logout()">
+              <span class="menu-icon">🚪</span>
+              <span class="menu-text">退出登录</span>
+              <span class="menu-arrow">›</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- VIP Page -->
+        <div id="page-vip" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>VIP会员</h1>
+          </div>
+
+          <div class="vip-current glass-card">
+            <div class="vip-level-display">
+              <span class="vip-crown-large">👑</span>
+              <div>
+                <h3 id="current-vip-name">普通会员</h3>
+                <p>升级VIP享受更多特权</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="vip-tiers">
+            <div class="vip-tier-card glass-card" data-tier="1">
+              <div class="tier-header">
+                <span class="tier-icon">🥉</span>
+                <h4>VIP 1</h4>
+                <span class="tier-price">$99/月</span>
+              </div>
+              <ul class="tier-benefits">
+                <li>✓ 手续费降低至0.08%</li>
+                <li>✓ 专属客服通道</li>
+                <li>✓ 每日1次AI分析</li>
+              </ul>
+              <button class="btn-primary" onclick="upgradeVIP(1)">立即开通</button>
+            </div>
+
+            <div class="vip-tier-card glass-card featured" data-tier="2">
+              <div class="tier-badge">最受欢迎</div>
+              <div class="tier-header">
+                <span class="tier-icon">🥈</span>
+                <h4>VIP 2</h4>
+                <span class="tier-price">$199/月</span>
+              </div>
+              <ul class="tier-benefits">
+                <li>✓ 手续费降低至0.05%</li>
+                <li>✓ 24/7专属客服</li>
+                <li>✓ 无限AI分析</li>
+                <li>✓ 优先提现</li>
+              </ul>
+              <button class="btn-primary" onclick="upgradeVIP(2)">立即开通</button>
+            </div>
+
+            <div class="vip-tier-card glass-card" data-tier="3">
+              <div class="tier-header">
+                <span class="tier-icon">🥇</span>
+                <h4>VIP 3</h4>
+                <span class="tier-price">$499/月</span>
+              </div>
+              <ul class="tier-benefits">
+                <li>✓ 零手续费交易</li>
+                <li>✓ 私人投资顾问</li>
+                <li>✓ 独家投资信号</li>
+                <li>✓ 即时提现</li>
+                <li>✓ 专属活动邀请</li>
+              </ul>
+              <button class="btn-primary" onclick="upgradeVIP(3)">立即开通</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Page -->
+        <div id="page-security" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>安全中心</h1>
+          </div>
+
+          <div class="security-score glass-card">
+            <div class="score-circle">
+              <span id="security-score">60</span>
+              <span class="score-label">安全分</span>
+            </div>
+            <p>完成以下设置提升账户安全</p>
+          </div>
+
+          <div class="security-items">
+            <div class="security-item glass-card">
+              <div class="security-item-left">
+                <span class="security-icon">🔑</span>
+                <div>
+                  <h4>登录密码</h4>
+                  <p>定期更换密码保障安全</p>
+                </div>
+              </div>
+              <button class="btn-outline" onclick="changePassword()">修改</button>
+            </div>
+
+            <div class="security-item glass-card">
+              <div class="security-item-left">
+                <span class="security-icon">📱</span>
+                <div>
+                  <h4>手机绑定</h4>
+                  <p id="phone-status">未绑定</p>
+                </div>
+              </div>
+              <button class="btn-outline" onclick="bindPhone()">绑定</button>
+            </div>
+
+            <div class="security-item glass-card">
+              <div class="security-item-left">
+                <span class="security-icon">🔐</span>
+                <div>
+                  <h4>Google验证器</h4>
+                  <p id="2fa-status">未开启</p>
+                </div>
+              </div>
+              <button class="btn-outline" onclick="setup2FA()">开启</button>
+            </div>
+
+            <div class="security-item glass-card">
+              <div class="security-item-left">
+                <span class="security-icon">💰</span>
+                <div>
+                  <h4>资金密码</h4>
+                  <p id="fund-password-status">未设置</p>
+                </div>
+              </div>
+              <button class="btn-outline" onclick="setFundPassword()">设置</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Methods Page -->
+        <div id="page-payment-methods" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>支付方式</h1>
+          </div>
+
+          <div id="payment-methods-list" class="payment-methods-list">
+            <div class="payment-method-item glass-card">
+              <div class="payment-method-info">
+                <span class="payment-icon">💳</span>
+                <div>
+                  <h4>Visa ****4242</h4>
+                  <p>有效期 12/28</p>
+                </div>
+              </div>
+              <span class="payment-default">默认</span>
+            </div>
+          </div>
+
+          <button class="add-payment-btn glass-card" onclick="addPaymentMethod()">
+            <span class="add-icon">+</span>
+            <span>添加新支付方式</span>
+          </button>
+        </div>
+
+        <!-- History Page -->
+        <div id="page-history" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="goBack()">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>交易记录</h1>
+          </div>
+
+          <div class="history-tabs">
+            <button class="history-tab active" data-type="all">全部</button>
+            <button class="history-tab" data-type="trade">交易</button>
+            <button class="history-tab" data-type="deposit">充值</button>
+            <button class="history-tab" data-type="withdraw">提现</button>
+          </div>
+
+          <div id="transaction-history" class="transaction-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Help Page -->
+        <div id="page-help" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="goBack()">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>帮助中心</h1>
+          </div>
+
+          <div class="help-search">
+            <input type="text" placeholder="搜索问题...">
+          </div>
+
+          <div class="faq-list">
+            <div class="faq-item">
+              <button class="faq-question" onclick="toggleFAQ(this)">
+                <span>如何充值？</span>
+                <span class="faq-arrow">›</span>
+              </button>
+              <div class="faq-answer">
+                <p>您可以通过银行卡、加密货币、电子钱包等多种方式进行充值。点击钱包页面的"充值"按钮，选择您偏好的支付方式，输入金额后确认即可。</p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" onclick="toggleFAQ(this)">
+                <span>如何提现？</span>
+                <span class="faq-arrow">›</span>
+              </button>
+              <div class="faq-answer">
+                <p>在钱包页面点击"提现"，输入提现金额和收款账户信息，确认后您的申请将在1-3个工作日内处理。</p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" onclick="toggleFAQ(this)">
+                <span>AI预测准确吗？</span>
+                <span class="faq-arrow">›</span>
+              </button>
+              <div class="faq-answer">
+                <p>我们的AI预测系统基于多种机器学习算法和历史数据分析。虽然我们努力提高准确性，但金融市场具有不可预测性，预测仅供参考，不构成投资建议。</p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" onclick="toggleFAQ(this)">
+                <span>交易手续费是多少？</span>
+                <span class="faq-arrow">›</span>
+              </button>
+              <div class="faq-answer">
+                <p>普通用户交易手续费为0.1%，VIP会员可享受更低手续费甚至零手续费。具体费率请参考VIP等级说明。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-support glass-card">
+            <h3>联系客服</h3>
+            <p>遇到问题？我们的客服团队24/7为您服务</p>
+            <button class="btn-primary" onclick="openChat()">在线客服</button>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="page-settings" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>设置</h1>
+          </div>
+
+          <div class="settings-section">
+            <h3>账户设置</h3>
+            <div class="setting-item">
+              <span>修改密码</span>
+              <span class="setting-arrow">›</span>
+            </div>
+            <div class="setting-item">
+              <span>绑定手机</span>
+              <span class="setting-arrow">›</span>
+            </div>
+            <div class="setting-item">
+              <span>实名认证</span>
+              <span class="setting-value">未认证</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>通知设置</h3>
+            <div class="setting-item">
+              <span>价格提醒</span>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <span>交易通知</span>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <span>促销信息</span>
+              <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>其他</h3>
+            <div class="setting-item">
+              <span>语言</span>
+              <span class="setting-value">简体中文</span>
+            </div>
+            <div class="setting-item">
+              <span>货币</span>
+              <span class="setting-value">USD</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="page-about" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>关于我们</h1>
+          </div>
+
+          <div class="about-content">
+            <div class="about-logo">
+              <svg viewBox="0 0 100 100" fill="none" width="80" height="80">
+                <defs>
+                  <linearGradient id="aboutLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#00f5ff" />
+                    <stop offset="100%" style="stop-color:#7b2ff7" />
+                  </linearGradient>
+                </defs>
+                <path d="M20 70 L35 45 L50 55 L65 30 L80 40" stroke="url(#aboutLogoGrad)" stroke-width="4" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="80" cy="40" r="6" fill="#00f5ff" />
+              </svg>
+            </div>
+            <h2>TradePro</h2>
+            <p class="version">版本 1.0.0</p>
+            <p class="about-desc">TradePro 是一款集成了专业交易工具、AI智能分析和便捷资金管理的移动交易平台。我们致力于为用户提供最优质的交易体验。</p>
+
+            <div class="about-links">
+              <a href="#">用户协议</a>
+              <a href="#">隐私政策</a>
+              <a href="#">风险提示</a>
+            </div>
+
+            <p class="copyright">© 2026 TradePro. All rights reserved.</p>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </svg>
+          <span>首页</span>
+        </button>
+        <button class="nav-item" data-page="markets">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
+          </svg>
+          <span>市场</span>
+        </button>
+        <button class="nav-item trade-btn" data-page="trading">
+          <div class="trade-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28">
+              <path fill="currentColor" d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <span>交易</span>
+        </button>
+        <button class="nav-item" data-page="wallet">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor"
+              d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+          </svg>
+          <span>钱包</span>
+        </button>
+        <button class="nav-item" data-page="profile">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor"
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+          <span>我的</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Trade Modal -->
+    <div id="trade-modal" class="modal">
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h3 id="modal-trade-title">买入 AAPL</h3>
+          <button class="close-modal" onclick="closeTradeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-price">
+            <span class="label">当前价格</span>
+            <span id="modal-price" class="price">$178.50</span>
+          </div>
+          <div class="input-group">
+            <label>数量</label>
+            <input type="number" id="modal-quantity" value="1" min="0.01" step="0.01">
+          </div>
+          <div class="modal-total">
+            <span>总金额</span>
+            <span id="modal-total">$178.50</span>
+          </div>
+          <button id="modal-confirm-btn" class="btn-primary buy-btn">确认买入</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referral Modal -->
+    <div id="referral-modal" class="modal">
+      <div class="modal-content glass-card">
+        <div class="modal-header">
+          <h3>邀请好友</h3>
+          <button class="close-modal" onclick="closeReferralModal()">&times;</button>
+        </div>
+        <div class="modal-body referral-body">
+          <div class="referral-code-display">
+            <span class="label">您的邀请码</span>
+            <div class="code-box">
+              <span id="my-referral-code">ABC123</span>
+              <button onclick="copyReferralCode()">复制</button>
+            </div>
+          </div>
+          <div class="referral-reward">
+            <div class="reward-icon">🎁</div>
+            <h4>邀请奖励</h4>
+            <p>成功邀请好友注册并交易，您和好友各获得 <strong>$50</strong> 奖励！</p>
+          </div>
+          <div class="share-buttons">
+            <button class="share-btn whatsapp">WhatsApp</button>
+            <button class="share-btn telegram">Telegram</button>
+            <button class="share-btn copy">复制链接</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat Modal -->
+    <div id="ai-chat-modal" class="modal chat-modal">
+      <div class="chat-container glass-card">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <div class="ai-avatar">🤖</div>
+            <div>
+              <h3>AI 投资顾问</h3>
+              <span class="ai-status">● 在线</span>
+            </div>
+          </div>
+          <button class="close-chat" onclick="closeAIChat()">×</button>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+          <div class="chat-message ai">
+            <div class="message-avatar">🤖</div>
+            <div class="message-content">
+              <p>您好！我是您的AI投资顾问。我可以帮您：</p>
+              <ul>
+                <li>📊 分析市场走势</li>
+                <li>📈 推荐投资机会</li>
+                <li>💡 解答投资问题</li>
+                <li>🔮 预测价格趋势</li>
+              </ul>
+              <p>请问有什么可以帮您？</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-quick-actions">
+          <button class="quick-action" onclick="sendQuickMessage('分析一下当前市场情况')">📊 市场分析</button>
+          <button class="quick-action" onclick="sendQuickMessage('今天有什么好的投资机会')">💰 投资机会</button>
+          <button class="quick-action" onclick="sendQuickMessage('AAPL现在适合买入吗')">🍎 AAPL分析</button>
+          <button class="quick-action" onclick="sendQuickMessage('BTC走势预测')">₿ BTC预测</button>
+        </div>
+        <div class="chat-input-container">
+          <input type="text" id="chat-input" placeholder="输入您的问题..." onkeypress="handleChatKeypress(event)">
+          <button class="send-btn" onclick="sendChatMessage()">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat Floating Button -->
+    <button id="ai-chat-btn" class="ai-chat-fab" onclick="openAIChat()">
+      <div class="fab-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28">
+          <path fill="currentColor"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+        </svg>
+      </div>
+      <span class="fab-label">AI助手</span>
+      <div class="fab-pulse"></div>
+    </button>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+      <span id="toast-message">操作成功</span>
+    </div>
+
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+
+</html>
