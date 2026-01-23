@@ -1141,6 +1141,94 @@
           </div>
         </div>
 
+        <!-- Bank Accounts Page -->
+        <div id="page-bank-accounts" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>银行账户</h1>
+          </div>
+
+          <div id="bank-accounts-list" class="payment-methods-list">
+            <div class="payment-method-item glass-card">
+              <div class="payment-method-info">
+                <span class="payment-icon">🏦</span>
+                <div>
+                  <h4>中国银行 ****8888</h4>
+                  <p>储蓄账户</p>
+                </div>
+              </div>
+              <span class="payment-default">默认</span>
+            </div>
+          </div>
+
+          <button class="add-payment-btn glass-card" onclick="addBankAccount()">
+            <span class="add-icon">+</span>
+            <span>添加银行账户</span>
+          </button>
+        </div>
+
+        <!-- Verification Page -->
+        <div id="page-verification" class="page">
+          <div class="page-header with-back">
+            <button class="back-btn" onclick="navigateTo('profile')">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </svg>
+            </button>
+            <h1>身份认证</h1>
+          </div>
+
+          <div class="verification-intro glass-card">
+            <div class="verification-icon">🛡️</div>
+            <h3>完成身份认证</h3>
+            <p>身份认证后可享受更高的提现额度和更多特权</p>
+          </div>
+
+          <div class="verification-levels">
+            <div class="verification-level glass-card">
+              <div class="level-header">
+                <span class="level-icon">📧</span>
+                <div>
+                  <h4>初级认证</h4>
+                  <p>邮箱验证</p>
+                </div>
+                <span class="level-status completed">✓ 已完成</span>
+              </div>
+              <p class="level-benefit">每日提现额度: $1,000</p>
+            </div>
+
+            <div class="verification-level glass-card">
+              <div class="level-header">
+                <span class="level-icon">📱</span>
+                <div>
+                  <h4>中级认证</h4>
+                  <p>手机验证</p>
+                </div>
+                <span class="level-status pending">未完成</span>
+              </div>
+              <p class="level-benefit">每日提现额度: $10,000</p>
+              <button class="btn-primary" onclick="bindPhone()">立即验证</button>
+            </div>
+
+            <div class="verification-level glass-card">
+              <div class="level-header">
+                <span class="level-icon">🪪</span>
+                <div>
+                  <h4>高级认证</h4>
+                  <p>身份证验证</p>
+                </div>
+                <span class="level-status pending">未完成</span>
+              </div>
+              <p class="level-benefit">每日提现额度: 无限制</p>
+              <button class="btn-primary" onclick="uploadID()">提交认证</button>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       <!-- Bottom Navigation -->
