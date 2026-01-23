@@ -15,6 +15,7 @@ app.use('/api/wallet', require('./routes/wallet'));
 app.use('/api/trading', require('./routes/trading'));
 app.use('/api/stocks', require('./routes/stocks'));
 app.use('/api/prediction', require('./routes/prediction'));
+app.use('/api/ai', require('./routes/ai'));
 
 // Health check
 app.get('/api/health', (req, res) => {

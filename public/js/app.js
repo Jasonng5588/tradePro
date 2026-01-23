@@ -1153,12 +1153,31 @@ async function sendChatMessage() {
     // Show typing indicator
     showTypingIndicator();
 
-    // Simulate AI response delay
-    setTimeout(() => {
+    try {
+        // Call Gemini AI API
+        const response = await fetch('/api/ai/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
         removeTypingIndicator();
-        const response = generateAIResponse(message);
-        addChatMessage(response, 'ai');
-    }, 1500);
+
+        if (data.success && data.response) {
+            // Format the response for HTML display
+            let formattedResponse = data.response
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            addChatMessage(formattedResponse, 'ai');
+        } else {
+            addChatMessage('抱歉，暂时无法获取分析结果，请稍后再试。', 'ai');
+        }
+    } catch (error) {
+        console.error('AI Chat error:', error);
+        removeTypingIndicator();
+        addChatMessage('网络错误，请检查网络连接后重试。', 'ai');
+    }
 }
 
 function addChatMessage(content, type) {
