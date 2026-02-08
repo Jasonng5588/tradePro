@@ -946,7 +946,7 @@ body {
 
 #page-charts {
   padding: 0;
-  display: flex;
+  display: none;
   flex-direction: column;
   height: calc(100vh - var(--nav-height));
 }
@@ -2943,8 +2943,10 @@ body {
   font-size: 20px;
   font-weight: 700;
   color: var(--bg-primary);
-} 
- 
+}
+
+/* ============================================
+   Verification Page   
 /* ============================================
    Verification Page
    ============================================ */
@@ -3002,7 +3004,7 @@ body {
   color: var(--text-muted);
 }
 
-.level-header > div {
+.level-header>div {
   flex: 1;
 }
 

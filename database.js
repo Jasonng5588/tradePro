@@ -1,7 +1,17 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
-const db = new Database(path.join(__dirname, 'trading.db'));
+// Determine database path based on environment
+let dbPath;
+if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+  // Vercel only allows writing to /tmp
+  dbPath = path.join('/tmp', 'trading.db');
+} else {
+  dbPath = path.join(__dirname, 'trading.db');
+}
+
+const db = new Database(dbPath);
 
 // Initialize database tables
 db.exec(`
